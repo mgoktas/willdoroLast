@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler'
 //native
 import React, { useEffect } from 'react';
-import { Platform, Text } from 'react-native';
+import { Linking, Platform, Text } from 'react-native';
 
 //icons
 import Icon from 'react-native-vector-icons/Ionicons'
@@ -17,7 +17,7 @@ import { NavigationContainer } from '@react-navigation/native';
 
 // //database
 // import { AppProvider } from '@realm/react';
-// const {RealmProvider} = TravelRealmContext;     
+const {RealmProvider} = UserRealmContext;     
 // import { TravelRealmContext} from './components/Database/MongoDB';
 
 //navigators
@@ -36,9 +36,18 @@ import AlarmWork from './screens/Settings/AlarmWork';
 // import Signup from './screens/Auth/Signup';
 import Forget from './screens/Auth/Forget';
 import ForgetNew from './screens/Auth/ForgetNew';
-import Change from './screens/Settings/Profile/Change';
+import Change from './screens/Settings/Profile/ChangeName';
 import Profile from './screens/Settings/Profile';
 import Sign from './screens/Auth/Sign';
+import Signup from './screens/Auth/Signup';
+import { AppProvider } from '@realm/react';
+import ChangeName from './screens/Settings/Profile/ChangeName';
+import ChangePassword from './screens/Settings/Profile/ChangePassword';
+import Subs from './screens/Settings/Profile/Subs';
+import SplashScreen from './components/SplashScreen';
+import { UserRealmContext } from './components/Storage/MongoDB';
+import ChangePasswordChange from './screens/Settings/Profile/ChangePasswordChange';
+import Tasks from './screens/Settings/Tasks';
 
 const Tabs = ({route}: { route: any}) => {
 
@@ -111,38 +120,54 @@ const linking = {
 };
 
 
+
 function App(): JSX.Element {
 
   // useEffect(() => {
-  //   if(Platform.OS == 'android'){
-  //     // SplashScreen2.hide()
-  //   }
-  // },[])
+  //   // Get the deep link used to open the app
+  //   const getUrl = async () => {
+  //     const universalLink = await Linking.getInitialURL();
+  //     //handle universal link
+  //   };
+
+  //   getUrl();
+  // });
+
+  // const navigation = useNavigation()
+
+  
+  // const handleUrl = ({ url }) {
+  //   naviga
+  // }
+  
+  // Linking.addEventListener('url', handleUrl)
 
   return (
     <NavigationContainer  linking={linking} fallback={<Text>Loading...</Text>}>
-      {/* <AppProvider id={'willdoro-xhauo'}>
-      <RealmProvider> */}
-      <Stack.Navigator initialRouteName='Focus' screenOptions={{headerShown: false}}>
+      <AppProvider id={'willdorolast-jjuhd'}>
+      <RealmProvider>
+      <Stack.Navigator initialRouteName='SplashScreen' screenOptions={{headerShown: false}}>
+        <Stack.Screen name='SplashScreen' component={SplashScreen}  />
         <Stack.Screen name='Focus' component={Focus}  />
         <Stack.Screen name='Settings' component={Settings}/>
         <Stack.Screen name='Profile' component={Profile}/>
         <Stack.Screen name='Sign' component={Sign} /> 
-        {/* <Stack.Screen name='Signup' component={Signup} /> */}
+        <Stack.Screen name='Signup' component={Signup} />
         <Stack.Screen name='Forget' component={Forget} />
         <Stack.Screen name='ForgetNew' component={ForgetNew} />
         <Stack.Screen name='AlarmWork' component={AlarmWork} />
+        <Stack.Screen name='Tasks' component={Tasks} />
         <Stack.Screen name='AlarmBreak' component={AlarmBreak} />
-        <Stack.Screen name='Change' component={Change}/>
+        <Stack.Screen name='Subs' component={Subs}/>
+        <Stack.Screen name='ChangeName' component={ChangeName}/>
+        <Stack.Screen name='ChangePassword' component={ChangePassword}/>
+        <Stack.Screen name='ChangePasswordChange' component={ChangePasswordChange}/>
       </Stack.Navigator>
-      {/* </RealmProvider>
-      </AppProvider> */}
+      </RealmProvider>
+      </AppProvider>
     </NavigationContainer>
     );
 }
-
-
-
 
 
 export default App;

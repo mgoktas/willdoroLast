@@ -1,4 +1,4 @@
-import { Dimensions, ScrollView, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Animated, Dimensions, ScrollView, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { horizontalScale, verticalScale } from "../Metrics";
 import Icon from 'react-native-vector-icons/Ionicons'
 import Icon2 from 'react-native-vector-icons/FontAwesome'
@@ -107,17 +107,17 @@ export const FocusButtonPause = ({isAction, isAction2, onPress1, onPress2}) => {
     )
 }
 
-export const Header = ({title, color, onPress, isSubtle, opacity, isBorderOk, isSheetOn, isWriting, isOnChange, isDarkModeOn, onPress2, isOnTask}) => {
+export const Header = ({title, color, onPress, isSubtle, opacity, isBorderOk, isSheetOn, isWriting, isOnChange, isDarkModeOn, onPress2, isOnTask, isAddOn, isAddOn0}) => {
     return (
         <View style={[styles.header, {backgroundColor: color, opacity: isSheetOn ? .7 : 1, borderBottomColor: 'black', borderBottomWidth: isBorderOk ? .7 : 0}]}>
           <Text style={[styles.haederText2, {opacity: opacity, color: isSheetOn ? 'gray' : isDarkModeOn ? 'white' : 'black'}]}>{title}</Text>
           <TouchableOpacity activeOpacity={isSheetOn ? .5 : .4} onPress={isSheetOn ? ()=>{} : onPress} style={[styles.headerIconCnt, {opacity: isSheetOn ? .5 : 1, zIndex: isSubtle || isSheetOn ? 0 : 1, }]}>
             <Icon name={'arrow-back'} size={25} color={isSheetOn ? 'gray' : '#007AFF' }/>
           </TouchableOpacity>
-          <View style={{opacity: isWriting ? 1 : 0}}>
-          <TouchableOpacity activeOpacity={!isOnChange ? 0 : .6} onPress={onPress2} style={[styles.headerIconCnt2, {opacity: isSubtle || !isOnChange ? 0 : 1, zIndex: isSubtle ? 0 : 1, }]}>
-                <Icon2 name={isOnTask ? 'plus' : 'check'} size={24} color={isOnTask ? '#f48c06' : '#007AFF'}/>
-        </TouchableOpacity>
+            <View style={{opacity: isWriting ? 1 : 0}}>
+          <TouchableOpacity activeOpacity={!isOnChange ? 0 : .6} onPress={onPress2} style={[styles.headerIconCnt2, {opacity: isSubtle || !isOnChange ? 0 : 1, zIndex: isSubtle ? 0 : 1, display: isAddOn0 ? 'none' : 'flex'}]}>
+                <Icon2 name={isOnTask && !isAddOn ? 'plus' : 'check'} size={24} color={isSheetOn && isOnTask ? 'gray' : isOnTask && !isAddOn ? '#f48c06' : '#007AFF'}/>
+            </TouchableOpacity>
             </View>
         </View>)
 }
@@ -142,8 +142,8 @@ export const HeaderButtonRight = ({onPress, isWriting, isDarkModeOn}) => {
     )
     }
 
-export const Space = ({space}) => (
-    <View style={{backgroundColor: 'transparent', marginVertical: verticalScale(space)}}>
+export const Space = ({space, isDate}) => (
+    <View style={{backgroundColor: 'transparent', marginVertical:isDate ? 0 : verticalScale(space),}}>
     </View>
 );
 
@@ -218,22 +218,50 @@ export const SettingsCellLogout = ({title, icon, backColor, style, onPress, isLa
     )
 }
 
-export const SettingsCellwText = ({title, isPremium, isProfile, iconArrow, backColor, style, onPress, value, isLast, isFirst, isDarkModeOn, isSelected}) => {
+export const SettingsCellwText = ({title, isPremium, isProfile, iconArrow, backColor, style, onPress, value, isTasksOn, isLast, isFirst, isDarkModeOn, isSelected, isAddOn, isTasks, isSheetOn, isTaskDone}) => {
 
 
     return (
-        <TouchableHighlight onPress={onPress} style={[styles.cell,{ borderTopLeftRadius: isFirst ? 10 : 0, borderTopRightRadius: isFirst ? 10 : 0, borderBottomLeftRadius: isLast ? 10 : 0, borderBottomRightRadius: isLast ? 10 : 0, borderBottomWidth: 0, zIndex: 10, opacity: 10, backgroundColor : isSelected && isDarkModeOn ? '#39393A' : isDarkModeOn ? '#1c1c1e' : 'white',}]}  activeOpacity={1} underlayColor={isDarkModeOn ? '#131314' : '#DDDCDF'}>
+        <TouchableHighlight onPress={onPress} style={[styles.cell,{ borderTopLeftRadius: isFirst ? 10 : 0, borderTopRightRadius: isFirst ? 10 : 0, borderBottomLeftRadius: isLast ? 10 : 0, borderBottomRightRadius: isLast ? 10 : 0, borderBottomWidth: 0, zIndex: 10, opacity: 10, backgroundColor : !isDarkModeOn && isSheetOn && isTasks && isSelected ? '#6F6F70' : isTasks && isSelected && isSheetOn ? '#3D3D3F' : !isSheetOn && !isDarkModeOn ? 'white' : isSheetOn && isDarkModeOn && isTasks ? '#2D2D2E' : isSheetOn && !isSelected ? 'gray' : isSheetOn && isSelected ? '#f2f2f6' : isSheetOn && !isDarkModeOn ? 'gray' : isSelected && isDarkModeOn ? '#39393A' : isDarkModeOn ? '#1c1c1e' : 'white', display: isAddOn ? 'none' : 'flex'}]}   activeOpacity={1} underlayColor={isDarkModeOn ? '#131314' : '#DDDCDF'}>
             
-            <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '100%'}}>
+            <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '100%', opacity: isSheetOn && isTasks ? .7 : 1}}>
                 <Text style={[styles.cellWTextTxt1, {left: isProfile ? 25 : 25, color: isPremium ? '#f48c06' : 'white', color: isDarkModeOn ? 'white' : 'black'}]} >{title}</Text> 
                 <View style={{flexDirection: 'row'}}>
-                    <Text style={[styles.cellWTextTxt2, {fontSize: isProfile ? 24 : 14, color: !isDarkModeOn ? '#1c1c1e' : '#EDEDEC'}]}>{value}</Text> 
+                    <Text style={[styles.cellWTextTxt2, {fontSize: isProfile ? 24 : 14, color: isTasksOn ? 'gray' : !isDarkModeOn ? '#1c1c1e' : '#EDEDEC'}]}>{value}</Text>  
                     <Icon2 style={styles.iconArrow} color={'#766E6E'} name={iconArrow} size={20}/>
+                </View>
+                <View style={{display: isTaskDone ? 'flex' : 'none', position: 'absolute', right: -5}}>
+                    <Icon2 name={'check'} size={24} color={ '#007AFF'}/>
                 </View>
             </View>
 
         </TouchableHighlight>
 
+    )
+}
+
+// export const AppleButtonWithHighlight = ({onPress, isPrimary, txt, color, isDarkModeOn, isOnTask}) => {
+export const AppleButtonWithHighlight = ({title, isPremium, isProfile, iconArrow, backColor, style, onPress, value, isTasksOn, isLast, isFirst, isDarkModeOn, isSelected, isAddOn, isTasks, isSheetOn, isTaskDone}) => {
+    return (
+<TouchableHighlight onPress={onPress} style={[styles.cell,{ borderTopLeftRadius: isFirst ? 10 : 0, borderTopRightRadius: isFirst ? 10 : 0, borderBottomLeftRadius: isLast ? 10 : 0, borderBottomRightRadius: isLast ? 10 : 0, borderBottomWidth: 0, zIndex: 10, opacity: 10, backgroundColor : !isSheetOn && !isDarkModeOn ? 'white' : isSheetOn && !isSelected ? 'gray' : isSheetOn && isSelected ? '#f2f2f6' : isSheetOn && !isDarkModeOn ? 'gray' : isSelected && isDarkModeOn ? '#39393A' : isDarkModeOn ? '#1c1c1e' : 'white',display: isAddOn ? 'none' : 'flex'}]}  activeOpacity={1} underlayColor={isDarkModeOn ? '#131314' : '#DDDCDF'}>
+            
+            <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '100%'}}>
+                <Text style={[styles.cellWTextTxt1, {left: isProfile ? 25 : 25, color: isPremium ? '#f48c06' : 'white', color: isDarkModeOn ? 'white' : 'black'}]} >{title}</Text> 
+                <View style={{flexDirection: 'row'}}>
+                    <Text style={[styles.cellWTextTxt2, {fontSize: isProfile ? 24 : 14, color: isTasksOn ? 'gray' : !isDarkModeOn ? '#1c1c1e' : '#EDEDEC'}]}>{value}</Text>  
+                    <Icon2 style={styles.iconArrow} color={'#766E6E'} name={iconArrow} size={20}/>
+                </View>
+                <View style={{display: isTaskDone ? 'flex' : 'none', position: 'absolute', right: -5}}>
+                    <Icon2 name={'check'} size={24} color={ '#007AFF'}/>
+                </View>
+            </View>
+
+        </TouchableHighlight>
+        // <TouchableHighlight onPress={onPress} style={[styles.appleBtnCnt, {backgroundColor: isPrimary ? color : isDarkModeOn ? 'black' : 'white', borderColor: isOnTask ? 'white' : isPrimary ? 'black' : color, opacity: 100, zIndex: 100}]}  activeOpacity={.1} underlayColor={'black'}>
+        //     <Text style={[styles.appleBtnTxt, {color : isPrimary && !isDarkModeOn ? 'white' : isDarkModeOn ? 'white' : color,}]}>
+        //         {txt}
+        //     </Text>
+        // </TouchableHighlight>
     )
 }
 
@@ -249,15 +277,15 @@ export const SettingsCellwSwitch = ({title, icon, backColor, style, onPress, val
     return (
         <View style={[styles.cell,style, { borderTopLeftRadius: isFirst ? 10 : 0, borderTopRightRadius: isFirst ? 10 : 0, borderBottomLeftRadius: isLast ? 10 : 0, borderBottomRightRadius: isLast ? 10 : 0, marginVertical: 0, backgroundColor: isDarkModeOn ? '#1c1c1e' : 'white'}]} onPress={onPress} >
             <View style={[styles.rowIcon ,{backgroundColor: backColor}]}>
-            </View>
-                <Text style={[styles.title, {color: isDarkModeOn ? 'white' : 'black', fontWeight: '400', fontSize: 16}]}>{title}</Text>
+                </View>
+                    <Text style={[styles.title, {color: isDarkModeOn ? 'white' : 'black', fontWeight: '400', fontSize: 16}]}>{title}</Text>
                 <View style={{marginRight: 20, height: 20, justifyContent: 'center'}}>
-                <Switch trackColor={{false: '#767577'}}
-                    style={{marginRight: 0}}
-                    onValueChange={onValueChange}
-                    value={value}/>
-        </View>
-                    </View> 
+                    <Switch trackColor={{false: '#767577'}}
+                        style={{marginRight: 0}}
+                        onValueChange={onValueChange}
+                        value={value}/>
+            </View>
+        </View> 
     )
 }
 
@@ -335,13 +363,13 @@ export const AppleInput = ({isDarkModeOn, txt, isCp, onChangeText, isSecure}) =>
     )
 }
 
-export const LineBwCell = ({isFull, isDarkModeOn}) => {
+export const LineBwCell = ({isFull, isDarkModeOn, isOnTask}) => {
     return (
-        <View style={{height: .5, backgroundColor: isDarkModeOn ? '#242426' : '#d0d0d2', flexDirection: 'row', marginHorizontal: isFull ? 0 : 20}}>
+        <View style={{height: .5, backgroundColor: isOnTask ? 'black' : isDarkModeOn ? '#242426' : '#d0d0d2', flexDirection: 'row', marginHorizontal: isFull ? 0 : 20}}>
             <View style={{height: '100%', backgroundColor: isFull ? '#242426' : 'black', width: 0}}>
                 
             </View>
-            <View style={{height: '100%', backgroundColor: isDarkModeOn ? '#1c1c1e' : 'white', width: 45}}>
+            <View style={{height: '100%', backgroundColor: isOnTask ? 'black' : isDarkModeOn ? '#1c1c1e' : 'white', width: isOnTask ? 100 : 45}}>
             </View>
         </View>
     )
@@ -355,20 +383,13 @@ export const CellUpperText = ({txt, isDarkModeOn}) => {
     )
 }
 
-e][]\
-\]'
-
-\
-\
-\
-port const TaskInput = ({title, isWritingTaskInput, onChangeText, taskChosen, onPress, isChoosingTheTask, isOnTask\
-}) => {
+export const TaskInput = ({title, isWritingTaskInput, onChangeText, taskChosen, onPress, isChoosingTheTask, isOnTask, didClickWrite}) => {
 
     const ref = useRef()
     ref?.current?.clear()
 
     return (
-        <View style={[styles.taskInputCnt, {height: taskChosen || isChoosingTheTask ? 0 : 40, opacity: taskChosen ? 0 : 1, zIndex: 10, display: taskChosen || isChoosingTheTask ? 'none' : 'flex'}]}>
+        <View style={[styles.taskInputCnt, {height: isOnTask ?  40 :  taskChosen || isChoosingTheTask ? 0 : 40, opacity: isOnTask ? 1 : taskChosen ? 0 : 1, zIndex: 10, display: !didClickWrite ? 'none' :  isOnTask ? 'flex' : taskChosen || isChoosingTheTask ? 'none' : 'flex', backgroundColor: isOnTask ? 'gray' : '#E7D1A9'}]}>
             <TextInput ref={ref} onChangeText={onChangeText} style={styles.taskInput} placeholder={title} placeholderTextColor={'gray'}>
                 
             </TextInput>
@@ -408,6 +429,143 @@ export const SessionsLeft = ({txt, taskChosen, value, hasTaskSessionEnded}) => {
             </Text>
         </View>    )
 }
+
+export const TasksInput = ({title, isWritingTaskInput, onChangeText, taskChosen, onPress, isOnTask, isAddOn, isDateAdding, open}) => {
+
+    const ref = useRef()
+
+    ref?.current?.clear()
+
+    return (
+        <View style={[styles.tasksInputCnt, {height: 40, opacity: 1, zIndex: 10, backgroundColor: isOnTask ? 'gray' : '#E7D1A9', display: open == true ? 'none' : isAddOn || isDateAdding ? 'flex' : 'none',}]}>
+            <TextInput ref={ref} onChangeText={onChangeText} style={styles.tasksInput} placeholder={title} placeholderTextColor={'white'}>
+                
+            </TextInput>
+        </View>
+    )
+}
+
+export const Swipe = ({isLeft, onPress, isFirst, isLast, scale, title}) => {
+
+
+    return  (
+
+    <TouchableOpacity activeOpacity={.7} onPress={onPress}  style={[styles.deleteBox, {borderTopRightRadius: isFirst ? 10 : 0,borderBottomLeftRadius: isLast ? 10 : 0, backgroundColor: isLeft ? '#EB0606' : '#0D67C3'}]}>
+        <View style={{justifyContent: 'center', alignContent: 'center'}}>
+            <Animated.Text style={[{transform: [{scale: scale}]}, {color: 'white', fontWeight: 500, fontSize: 16}]}>
+            {title}
+            </Animated.Text>
+        </View>
+    </TouchableOpacity>
+)}
+
+
+interface ChildPropsEdit {
+    setDelete: void
+}
+
+export const SwipeRight = ({isLeft, onPress, isFirst, isLast, scale, title}) => {
+
+
+    return  (
+
+    <TouchableOpacity activeOpacity={.7} onPress={onPress}  style={[styles.deleteBox, {borderTopRightRadius: isFirst ? 10 : 0,borderBottomLeftRadius: isLast ? 10 : 0, backgroundColor: isLeft ? '#EB0606' : '#0D67C3'}]}>
+        <View style={{justifyContent: 'center', alignContent: 'center'}}>
+            <Animated.Text style={[{transform: [{scale: scale}]}, {color: 'white', fontWeight: 500, fontSize: 16}]}>
+            {title}
+            </Animated.Text>
+        </View>
+    </TouchableOpacity>
+)}
+
+
+export const renderLeftActions = (progress, dragX, onPress, item, items, onPress2) => {
+    const scale = dragX.interpolate({
+        inputRange: [0, 100],
+        outputRange: [0, 1]
+    })
+    
+
+return (
+
+    <Swipe onPress={onPress2} isLeft={true} title={'Delete'}  isFirst={item.index == 0 ? true : false} isLast={item.index == items.length ? true : false} scale={scale} onPress={onPress} />
+
+);
+};
+
+
+export const renderRightActions = (progress, dragX, onPress, item, items, props : ChildPropsEdit, ) => {
+    const scale = dragX.interpolate({
+        inputRange: [0, 100],
+        outputRange: [.5, 0]
+    })
+
+    
+return (
+
+    <SwipeRight onPress={() => { props.setDelete(); onPress(item._id); }} isLeft={false} title={'Done'} isFirst={item.index == 0 ? true : false} isLast={item.index == items.length ? true : false} scale={scale} onPress={onPress} />
+
+);
+};
+
+export const TaskCnt = ({title, isPremium, coosingTask, iconArrow, backColor, style, onPress, value, isTasksOn, isLast, isFirst, isDarkModeOn, isSelected, isAddOn, isTasks, isSheetOn, isTaskDone}) => (
+    // <TouchableHighlight onPress={onPress} style={styles.taskCnt} underlayColor={'#D5D5D5'} activeOpacity={1}>
+        //     <View style={[styles.taskCntCnt, {flexDirection: 'row', justifyContent: 'space-between', width: '100%'}]}>
+        //         <Text style={styles.taskTxt}>{title}</Text>
+        //     </View>
+        // </TouchableHighlight>
+
+<TouchableHighlight onPress={onPress} style={[styles.cell,{ borderTopLeftRadius: isFirst ? 10 : 0, borderTopRightRadius: isFirst ? 10 : 0, borderBottomLeftRadius: isLast ? 10 : 0, borderBottomRightRadius: isLast ? 10 : 0, borderBottomWidth: 0, zIndex: 10, opacity: 10, backgroundColor : isSelected ? '#E8E7EB' :  !isDarkModeOn && isSheetOn && isTasks && isSelected ? '#6F6F70' : isTasks && isSelected && isSheetOn ? '#3D3D3F' : !isSheetOn && !isDarkModeOn ? 'white' : isSheetOn && isDarkModeOn && isTasks ? '#2D2D2E' : isSheetOn && !isSelected ? 'gray' : isSheetOn && isSelected ? '#f2f2f6' : isSheetOn && !isDarkModeOn ? 'gray' : isSelected && isDarkModeOn ? '#39393A' : isDarkModeOn ? '#1c1c1e' : 'white', display: isAddOn ? 'none' : 'flex', marginHorizontal: 0}]}   activeOpacity={1} underlayColor={isDarkModeOn ? '#131314' : '#DDDCDF'}>
+            
+<View style={{flexDirection: 'row', justifyContent: 'space-between', width: '100%', opacity: isSheetOn && isTasks ? .7 : 1}}>
+    <Text style={[styles.cellWTextTxt1, {left: 10, color: isPremium ? '#f48c06' : 'white', color: isDarkModeOn ? 'white' : 'black'}]} >{title}</Text> 
+    <TouchableOpacity style={{right: 42, display: coosingTask ? 'flex' : 'none'}} >
+        <Icon2 name={'play-circle'} size={20}/>
+    </TouchableOpacity>
+</View>
+
+</TouchableHighlight>
+)
+
+export const TaskCntCnt = ({title, isPremium, coosingTask, onPressPlay, backColor, style, onPress, value, isTasksOn, isLast, isFirst, isDarkModeOn, isSelected, isAddOn, isTasks, isSheetOn, isTaskDone}) => (
+    // <TouchableHighlight onPress={onPress} style={styles.taskCnt} underlayColor={'#D5D5D5'} activeOpacity={1}>
+        //     <View style={[styles.taskCntCnt, {flexDirection: 'row', justifyContent: 'space-between', width: '100%'}]}>
+        //         <Text style={styles.taskTxt}>{title}</Text>
+        //     </View>
+        // </TouchableHighlight>
+
+<View onPress={onPress} style={[styles.cell,{ borderTopLeftRadius: isFirst ? 10 : 0, borderTopRightRadius: isFirst ? 10 : 0, borderBottomLeftRadius: isLast ? 10 : 0, borderBottomRightRadius: isLast ? 10 : 0, borderBottomWidth: 0, zIndex: 10, opacity: 10, backgroundColor : isSelected ? '#E8E7EB' :  !isDarkModeOn && isSheetOn && isTasks && isSelected ? '#6F6F70' : isTasks && isSelected && isSheetOn ? '#3D3D3F' : !isSheetOn && !isDarkModeOn ? 'white' : isSheetOn && isDarkModeOn && isTasks ? '#2D2D2E' : isSheetOn && !isSelected ? 'gray' : isSheetOn && isSelected ? '#f2f2f6' : isSheetOn && !isDarkModeOn ? 'gray' : isSelected && isDarkModeOn ? '#39393A' : isDarkModeOn ? '#1c1c1e' : 'white', display: isAddOn ? 'none' : 'flex', marginHorizontal: 0}]}   activeOpacity={1} underlayColor={isDarkModeOn ? '#131314' : '#DDDCDF'}>
+            
+<View style={{flexDirection: 'row', justifyContent: 'space-between', width: '100%', opacity: isSheetOn && isTasks ? .7 : 1}}>
+    <Text style={[styles.cellWTextTxt1, {left: 10, color: isPremium ? '#f48c06' : 'white', color: isDarkModeOn ? 'white' : 'black'}]} >{title}</Text> 
+    <TouchableOpacity onPress={onPressPlay} style={{right: 42, display: coosingTask ? 'flex' : 'none'}} >
+        <Icon2 name={'play-circle'} size={20}/>
+    </TouchableOpacity>
+</View>
+
+</View>
+)
+
+export const WhatDay = ({coosingTask, onPressBack, onPressDate, date}) => (
+    <View style={[styles.whatDayCnt]}>
+        <TouchableOpacity onPress={onPressBack} activeOpacity={.7} style={[styles.whatDayIconArrow,]}>
+            <Icon color={coosingTask ? '#5CB270' : '#f48c06'} name={'arrow-back'} size={24}/>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onPressDate} activeOpacity={.7} style={{flexDirection: 'row'}}>
+            <Text style={styles.whatDayTxt}>
+                {date}
+            </Text>
+            <View style={styles.whatDayIcon}>
+                <Icon2 name={'caret-down'} size={20}/>
+            </View>
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={.7} style={[styles.whatDayIconPlus, {display: coosingTask ? 'flex' : 'none'}]}>
+            <Icon2 color={'#007AFF'} name={'plus'} size={20}/>
+        </TouchableOpacity>
+    </View>
+)
+
+
 
 export const styles = StyleSheet.create({
     pageSettings : {
@@ -766,6 +924,22 @@ export const styles = StyleSheet.create({
         marginEnd: 15,
         color: '#EDEDEC'
     },
+    appleBtnCnt: {
+        height: 45,
+        backgroundColor: 'white',
+        marginHorizontal: 20,
+        marginVertical: 5,
+        borderRadius: 10,
+        justifyContent: 'center',
+        borderWidth: 1,
+        flexDirection: 'row'
+    },
+    appleBtnTxt: {
+        color: 'black',
+        fontSize: 17,
+        fontWeight: 500,
+        alignSelf: 'center'
+    },
     rowIcon: {borderWidth: 0, padding:3, borderRadius: 6, marginLeft: 20}, 
     iconArrow: {marginRight: 20},
     cellTxt : {fontSize: 13, color: 'gray'},
@@ -853,9 +1027,38 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         
     },
+    tasksInputCnt: {
+        marginHorizontal: 20,
+        height: 40,
+        borderRadius: 10,
+        width: '80%',
+        backgroundColor: '#E7D1A9',
+        alignSelf: 'center',
+        top: 0,
+        justifyContent: 'center',
+        flexDirection: 'row'
+    },
+    tasksTitleCnt: {
+        marginHorizontal: 20,
+        height: 40,
+        borderRadius: 10,
+        width: '80%',
+        // backgroundColor: '#E7D1A9',
+        alignSelf: 'center',
+        top: SCREEN_HEIGHT / 5,
+        justifyContent: 'center',
+        flexDirection: 'row',
+        
+    },
     taskInput: {
         fontSize: 18,
         // left: 50
+        alignSelf: 'center',
+    },
+    tasksInput: {
+        fontSize: 18,
+        // left: 50,
+        color: 'white',
         alignSelf: 'center',
     },
     taskTitleTxt: {
@@ -899,6 +1102,64 @@ export const styles = StyleSheet.create({
         color: 'white',
         alignSelf: 'flex-end',
         opacity: .7
+    },
+    deleteBox: {
+        justifyContent: 'center', 
+        backgroundColor: '#EB0606', 
+        alignItems: 'center',
+        width: 120,
+        height: 40,
+        left: 20
+    },
+    taskCnt: {
+        height: 40,
+        justifyContent: 'flex-start',
+        flexDirection: 'row',
+        backgroundColor: 'white',
+        paddingHorizontal: 20,
+        alignContent: 'center',
+        alignItems: 'center'
+    },
+    taskCntCnt: {
+        justifyContent: 'flex-start',
+        flexDirection: 'row',
+        backgroundColor: 'white',
+        alignContent: 'center',
+        alignItems: 'center',
+        width: '100%'
+        },
+    taskCntIconPlay: {
+        position: 'absolute',
+        right: 20,
+        alignSelf: 'flex-end',
+    },
+    taskTxt: {
+        fontSize: 18,
+        color: 'black',
+    },
+    whatDayCnt: {
+        justifyContent: 'center',
+        flexDirection: 'row',
+        width: '100%'
+    },
+    whatDayTxt: {
+        fontWeight: '500',
+        color: 'black',
+        fontSize: 20
+    },
+    whatDayIcon: {
+        justifyContent: 'center',
+        left: 5
+    },
+    whatDayIconPlus: {
+        position: 'absolute',
+        alignSelf: 'flex-end',
+        right: 45
+    },
+    whatDayIconArrow: {
+        position: 'absolute',
+        alignSelf: 'flex-start',
+        left: 30
     }
     
 

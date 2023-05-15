@@ -1,20 +1,26 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import { Space, styles } from '../../components/Utilities';
-import { BackButton, BottomText, CustomButton, CustomButtonForget, Input, InputEm, InputPw, InputPwAgainNew, LineSeperator, Logo, TextButton } from '../../components/Utilities2';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Header, Space, styles } from '../../components/Utilities/Utilities';
+import { BackButton, BottomText, CustomButton, CustomButtonForget, Input, InputEm, InputPw, InputPwAgainNew, LineSeperator, Logo, TextButton } from '../../components/Utilities/Utilities2';
+import { AppleButton } from '../../components/Utilities/Utilities3';
 
 const ForgetNew = ({navigation}) => (
-    <View style={styles.pageSign}>
+    <SafeAreaView style={styles.pageSign}>
+        <Header 
+        onPress={() => {
+                navigation.goBack()
+            } } title={'Reset Password'} color={1} opacity={1} isSubtle={undefined}  />
+        
         <Space space={24}/>
-        <Logo />
         <Space space={24}/>
         <Input icon={'lock-closed'} placeholder={'New Password'}/>
         <LineSeperator/>
         <Input icon={'lock-closed'} placeholder={'New Password'}/>
         <LineSeperator/>
         <Space space={4}/>
-        <CustomButtonForget onPress={() => {navigation.navigate('Focus')}} sent={true} title={'Set New Password'} bck={'white'}/> 
-    </View>
+        <AppleButton onPress={() => {navigation.navigate('Signup')}} txt={'Set New Password'} isPrimary={true} color={'gray'}/>
+    </SafeAreaView>
 );
 
 export default ForgetNew;

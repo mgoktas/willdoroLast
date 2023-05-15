@@ -2,30 +2,35 @@
 import React, { useState } from 'react';
 import { Alert, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { HeaderButton, Space, styles } from '../../components/Utilities';
-import { BackButton, BottomText, CustomButton, CustomButtonForget, Input, InputEm, InputPw, LineSeperator, Logo, TextButton } from '../../components/Utilities2';
+import { Header, HeaderButton, Space, styles } from '../../components/Utilities/Utilities';
+import { BackButton, BottomText, CustomButton, CustomButtonForget, Input, InputEm, InputPw, LineSeperator, Logo, TextButton } from '../../components/Utilities/Utilities2';
+import { AppleButton } from '../../components/Utilities/Utilities3';
 
 const Forget = ({navigation}) => {
-    const app = useApp();
+    // const app = useApp();
     const [email, setEmail] = useState('')
 
-    const resetPassword = async () => {
-        try{
-            await app.emailPasswordAuth.sendResetPasswordEmail({ email });
-        } catch (err){
-            Alert.alert(err)
-        }
-    }
+    // const resetPassword = async () => {
+    //     try{
+    //         await app.emailPasswordAuth.sendResetPasswordEmail({ email });
+    //     } catch (err){
+    //         Alert.alert(err)
+    //     }
+    // }
 
     return (
     <SafeAreaView style={styles.pageSign}>
-        <HeaderButton onPress={() => {navigation.goBack()}} />
+        <Header
+        onPress={() => {
+                navigation.goBack()
+            }} 
+            title={'Forget My Password'} color={1} opacity={1} isSubtle={undefined} isBorderOk={true}  />
+        <Space space={24}/>        
         <Logo />
         <Space space={24}/>
         <Input autoCap={'none'} icon={'mail'} placeholder={'Email address'} isPassword={false} onChangeText={(txt: any) => setEmail(txt)}/>
-        <LineSeperator/>
         <Space space={4}/>
-        <CustomButtonForget autoCap={false} onPress={resetPassword} sent={true} title={'Send Email'} bck={'white'}/> 
+        <AppleButton txt={'Send Email'} isPrimary={true} color={'#007AFF'}/>
         
     </SafeAreaView>
 )}
